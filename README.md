@@ -25,4 +25,3 @@ npm run dev
 - Vite
 - Axios
 - CSS
-```
