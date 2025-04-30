@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Roulette Royale</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+    }
+
+    label {
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 0 !important;
+      align-self: start;
+    }
+
+    #roulette-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      z-index: 0;
+    }
+
+    #ui {
+      position: absolute;
+      left: 20%;
+      top: 30%;
+      transform: translateX(-50%);
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #ui select,
+    #ui input,
+    #ui button {
+      font-size: 16px;
+      padding: 6px 0px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    #ui button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-left: 10px;
+      font-weight: bold;
+    }
+
+    #logout {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #credits {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px 20px;
+      background-color: #222;
+      color: white;
+      border-radius: 5px;
+      z-index: 10;
+    }
+    #bonus-timer {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 12px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  z-index: 10;
+}
+
+  </style>
+</head>
+<body>
+  <div id="bonus-timer"></div>
+  <div id="logout">Déconnexion</div>
+  <canvas id="roulette-canvas"></canvas>
+  <div id="ui">
+    <label for="betType">Type de mise :</label>
+    <select id="betType">
+      <option value="color">Couleur</option>
+      <option value="even">Pair</option>
+      <option value="odd">Impair</option>
+      <option value="range_1_12">1 à 12</option>
+      <option value="range_13_24">13 à 24</option>
+      <option value="range_25_36">25 à 36</option>
+      <option value="number">Numéro précis</option>
+    </select>
+    <input type="number" id="specificNumber" min="0" max="35" placeholder="Numéro précis" style="display: none;">
+    
+    <label for="betOn">Miser sur :</label>
+    <select id="betOn">
+      <option value="red">Rouge</option>
+      <option value="black">Noir</option>
+      <option value="green">Vert</option>
+    </select>
+    <label for="betAmount">Montant de la mise :</label>
+    <input type="number" id="betAmount" value="10" min="1" />
+    <button id="play">Jouer</button>
+    <br>
+    <p id="result"></p>
+  </div>
+  <div id="leaderboard" style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background-color: #222; color: white; padding: 10px 20px; border-radius: 5px; z-index: 10; text-align: center;">
+    <p id="worldRecord"></p>
+  </div>  
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
+
+<script>
+  const betTypeSelect = document.getElementById('betType');
+  const specificNumberInput = document.getElementById('specificNumber');
+  const betOnSelect = document.getElementById('betOn');
+
+  function updateBetInputs() {
+    const type = betTypeSelect.value;
+
+    specificNumberInput.style.display = type === 'number' ? 'inline-block' : 'none';
+
+    if (type === 'color') {
+      betOnSelect.style.display = 'inline-block';
+      betOnSelect.previousElementSibling.style.display = 'inline-block';
+    } else {
+      betOnSelect.style.display = 'none';
+      betOnSelect.previousElementSibling.style.display = 'none';
+    }
+  }
+
+  betTypeSelect.addEventListener('change', updateBetInputs);
+  window.addEventListener('DOMContentLoaded', updateBetInputs);
+</script>

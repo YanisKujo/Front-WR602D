@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Inscription</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Créer un compte</h1>
+  <form id="registerForm">
+    <label>Prénom : <input name="firstName" type="texte" required></label><br>
+    <label>Nom : <input name="lastName" type="texte" required></label><br>
+    <label>Email : <input type="email" name="email" required></label><br>
+    <label>Mot de passe : <input type="password" name="password" required></label><br>
+    <button type="submit">Créer mon compte</button><p>Déjà inscrit ? <a href="login.html">Se connecter</a></p>
+  </form>
+
+  <pre id="result"></pre>
+
+  <script type="module">
+    import axios from 'https://cdn.jsdelivr.net/npm/axios@1.6.8/+esm';
+
+    // Si déjà connecté, redirection vers le jeu
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      window.location.href = 'game.html';
+    }
+
+    const form = document.getElementById('registerForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const payload = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        password: formData.get('password')
+      };
+
+      try {
+        await axios.post('https://localhost/api/users', payload, {
+          headers: { 'Content-Type': 'application/ld+json' }
+        });
+
+        result.textContent = '✅ Compte créé avec succès ! Redirection en cours...';
+        setTimeout(() => window.location.href = 'login.html', 1500);
+      } catch (err) {
+        // Amélioration des messages d'erreur
+        if (err.response?.data?.violations) {
+          result.textContent = err.response.data.violations.map(v => `❌ ${v.propertyPath}: ${v.message}`).join('\n');
+        } else {
+          result.textContent = `❌ ${err.response?.data?.detail || err.message}`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
