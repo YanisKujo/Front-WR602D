@@ -1,6 +1,3 @@
-### 🎮 **Frontend (Three.js + Vite)** - `Front-WR602D`
-
-```markdown
 # Frontend - WR602D
 
 Frontend du jeu de roulette 3D développé en Three.js avec gestion de mises, animations et scores.
